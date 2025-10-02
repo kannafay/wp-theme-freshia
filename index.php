@@ -1,5 +1,5 @@
-<?=get_header()?>
+<?php get_header(); ?>
 
 <p>123</p>
 
-<?=get_footer()?>
+<?php get_footer(); ?>
