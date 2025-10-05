@@ -14,3 +14,13 @@ function freshia_setup() {
     // 禁用前端管理员工具栏
     add_filter('show_admin_bar', '__return_false');
 }
+
+/**
+ * 简化引入函数
+ */
+function the_asset($path) {
+    echo get_template_directory_uri() . '/' . $path;
+}
+function get_the_asset($path) {
+    return get_template_directory_uri() . '/' . $path;
+}

@@ -4,6 +4,6 @@
 
 <section>这也是首页</section>
 
-<button>0</button>
+<button id="fetch-test">请求测试</button>
 
 <?php get_footer(); ?>

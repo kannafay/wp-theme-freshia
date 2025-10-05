@@ -30,7 +30,7 @@ function freshia_register_blocks() {
     }
 
     // 扫描 blocks 目录下的所有区块并注册
-    $blocks_dir = get_template_directory() . '/blocks';
+    $blocks_dir = get_template_directory() . '/blocks/build';
     foreach (glob($blocks_dir . '/*', GLOB_ONLYDIR) as $block_folder) {
         if (file_exists($block_folder . '/block.json')) {
             register_block_type($block_folder);

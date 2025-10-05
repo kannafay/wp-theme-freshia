@@ -1,7 +1,9 @@
-import test from './modules/test.js';
+import initHeadScripts from './main-head.js';
+import themeMode from './modules/theme-mode.js';
+import wpAjax from './packages/wp-ajax.js';
 
 // 初始化 Pjax 进行无刷新页面加载
-if (option.pjax) {
+if (freshia.options.pjax) {
     document.addEventListener('DOMContentLoaded', () => {
         try {
             const { Pjax } = window['pjax-api'];
@@ -11,8 +13,8 @@ if (option.pjax) {
                 form: ':is(form)[method="get"]',
             });
 
-        } catch (error) {
-            console.error('Failed to load Pjax:', error);
+        } catch (e) {
+            console.error('Failed to load Pjax:', e);
         }
     });
 
@@ -24,6 +26,24 @@ if (option.pjax) {
 
 document.addEventListener('DOMContentLoaded', initMainScripts);
 function initMainScripts() {
-    // 在这里初始化页面脚本
-    test();
+    themeMode();
+    fetchTest();
+}
+
+// AJAX 请求测试
+function fetchTest() {
+    const btn = document.getElementById('fetch-test')
+    if (!btn) return;
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const text = e.target.textContent;
+        const res = wpAjax.get({
+            action: 'get_action',
+        })
+        res.then(data => {
+            console.log('请求成功:', data);
+            e.target.textContent = text + ' ' + data.data.message;
+        });
+    });
+
 }

@@ -1,3 +1,7 @@
-<?php
+<?php get_header(); ?>
 
-the_content();
+<section>
+    <?php the_content(); ?>
+</section>
+
+<?php get_footer(); ?>

@@ -1,8 +1,11 @@
 /**
  * 预先执行的头部脚本
  */
-initHeadScripts();
-function initHeadScripts() {
+
+export default function initHeadScripts() {
     
 }
-
+if (!window.__MAIN_HEAD_INITIALIZED__) {
+    initHeadScripts();
+    window.__MAIN_HEAD_INITIALIZED__ = true;
+}

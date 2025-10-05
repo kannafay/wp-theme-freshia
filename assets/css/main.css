@@ -1,0 +1,12 @@
+:root {
+    --header-height: 60px;
+    --color-bg: #ffffff;
+    --color-text: #333333;
+    --color-box-bg: #f9f9f9;
+}
+
+:root.dark {
+    --color-bg: #0E0E0E;
+    --color-text: #ffffff;
+    --color-box-bg: #1A1A1A;
+}

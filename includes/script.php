@@ -51,23 +51,43 @@ function freshia_scripts() {
         true
     );
 
+    // 引入主js文件
+    wp_enqueue_script(
+        'main-script',
+        get_template_directory_uri() . '/assets/js/main.js',
+        array('jquery'),
+        filemtime(get_template_directory() . '/assets/js/main.js'),
+        true
+    );
+
     // 本地化脚本，传递PHP数据到JS
-    wp_localize_script('main-script', 'freshia', array(
+    wp_localize_script('head-script', 'freshia', array(
         'ajax_url' => admin_url('admin-ajax.php'),
         'site_url' => get_site_url(),
-        'nonce'    => wp_create_nonce('freshia_nonce'),
+        'ajax_nonce' => wp_create_nonce('freshia_nonce'),
         'is_logged_in' => is_user_logged_in(),
         'user_id' => get_current_user_id(),
         'current_user_can_admin' => current_user_can('manage_options'),
+        'theme_version' => wp_get_theme()->get('Version'),
+        'options' => array(
+            'pjax' => true,
+        ),
     ));
+
+    add_filter('script_loader_tag', 'add_module_type_script', 10, 3);
 }
 
-// 引入主js文件
-add_action('wp_footer', function() {
-    $url = get_template_directory_uri() . '/assets/js/main.js';
-    $ver = filemtime(get_template_directory() . '/assets/js/main.js');
-    echo '<script type="module" src="' . esc_url($url) . '?ver=' . $ver . '"></script>';
-}, 999);
+// 过滤脚本标签，添加 type="module"
+function add_module_type_script($tag, $handle, $src) {
+    $scripts = [
+        'head-script',
+        'main-script',
+    ];
+    if (in_array($handle, $scripts)) {
+        return str_replace('type="text/javascript"', 'type="module"', $tag);
+    }
+    return $tag;
+}
 
 /**
  * 移除前端的 jQuery Migrate，避免控制台提示
