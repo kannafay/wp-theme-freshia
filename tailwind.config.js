@@ -6,12 +6,14 @@ module.exports = {
 	content: [
 		'./*.php',
 		'./**/*.php',
-		'./assets/js/*.js',
-		'./blocks/build/**/*.js',
+		'./assets/js/**/*.js',
+		'./blocks/build/**/*.{js,php}',
 		// 排除不必要的目录
-		'!./node_modules',
-		'!./.git',
-		'!./vendor',
+		'!./**/node_modules/**',
+		'!./assets/js/lib/**',
+		'!./admin/**',
+		'!./.git/**',
+		'!./vendor/**',
 	],
 	theme: {
 		extend: {

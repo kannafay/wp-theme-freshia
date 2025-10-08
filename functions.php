@@ -62,6 +62,11 @@ function freshia_require_directory(string $relative_path): void {
     }
 }
 
-foreach (['includes', 'modules'] as $directory) {
+$floders = [
+    'includes',
+    'modules',
+    'admin/option',
+];
+foreach ($floders as $directory) {
     freshia_require_directory($directory);
 }

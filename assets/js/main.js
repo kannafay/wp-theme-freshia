@@ -1,6 +1,7 @@
 import initHeadScripts from './main-head.js';
 import themeMode from './modules/theme-mode.js';
 import wpAjax from './packages/wp-ajax.js';
+import wpRest from './packages/wp-rest.js';
 
 // 初始化 Pjax 进行无刷新页面加载
 if (freshia.options.pjax) {
@@ -30,20 +31,53 @@ function initMainScripts() {
     fetchTest();
 }
 
-// AJAX 请求测试
+// WP AJAX 请求测试
 function fetchTest() {
-    const btn = document.getElementById('fetch-test')
-    if (!btn) return;
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const text = e.target.textContent;
-        const res = wpAjax.get({
-            action: 'get_action',
-        })
-        res.then(data => {
-            console.log('请求成功:', data);
-            e.target.textContent = text + ' ' + data.data.message;
+    const btns = document.querySelectorAll('.request');
+
+    btns.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            console.time('请求用时');
+            e.preventDefault();
+            const id = e.target.id;
+            let req, res, data = {
+                name: 'kanna',
+                age: 18,
+                hobby: ['reading', 'coding', 'gaming'],
+                game: {
+                    lol: 'League of Legends',
+                    dota: 'Dota 2',
+                }
+            };
+
+            // ----- AJAX 请求 -----
+            if (id === 'ajax') {
+                req = 'WP AJAX';
+                res = await wpAjax.post('ajax_test', { data }, true);
+            }
+
+            // ----- REST API 请求 -----
+            if (id === 'rest') {
+                req = 'WP REST API';
+                res = await wpRest.post('freshia/v1/rest_test', data);
+            }
+
+            console.log(req, '请求成功:', res);
+            console.timeEnd('请求用时');
         });
     });
-
+    
+    // ----- REST API 自动请求（页面加载完成后） -----
+    const data = new FormData();
+    data.set('id', 1);
+    data.set('page', 2);
+    data.set('name', 'Kanna');
+    wpRest.post('freshia/v1/rest_args', {
+        id: 1,
+        page: 2,
+        name: 'Kanna'
+    })
+    .then(res => {
+        console.log('WP REST API 自动请求成功:', res);
+    })
 }

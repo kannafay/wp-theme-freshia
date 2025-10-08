@@ -3,16 +3,16 @@
  * 
  * 支持：
  * - GET / POST
- * - FormData, URLSearchParams, Object 三种数据格式
+ * - FormData, URLSearchParams, Object（可使用 JSON 请求类型） 三种数据格式
  * - 自动添加 action 和 _wpnonce
  * - 超时中止（默认 30000ms）
  * - 相同请求自动取消前一个（防止重复提交）
  * 
  * 参数：
  * - action: 必须，WordPress AJAX action 名称
- * - data: 可选，发送的数据，支持 FormData, URLSearchParams 和 普通对象三种格式
+ * - data: 可选，发送的数据，支持 FormData, URLSearchParams 和 Object 三种格式
  * - method: 可选，HTTP 方法，默认为 'POST'，可选 'GET'
- * - headers: 可选，自定义请求头，默认为空 Headers 对象
+ * - headers: 可选，自定义请求头（支持 JSON 请求类型），默认为空 Headers 对象
  * - timeout: 可选，请求超时时间，单位毫秒，默认为 30000ms
  */
 
@@ -21,18 +21,28 @@ const wpAjax = (() => {
     const pendingRequests = {};
 
     async function request(options) {
-        let { action, data, method, headers, timeout } = options;
+        // console.log(options);
+
+        let { action, method, data, headers, timeout, isJSON } = options;
 
         if (!action) {
             return Promise.reject(new Error('wpAjax: action 参数不能为空'));
         }
 
+        if (!['GET', 'POST'].includes(method.toUpperCase())) {
+            return Promise.reject(new Error('wpAjax: 只支持 GET 和 POST 请求'));
+        }
+
+        if (method === 'GET' && isJSON) {
+            return Promise.reject(new Error('wpAjax: GET 请求不支持 JSON 格式的 data'));
+        }
+
         data = data || null;
         timeout = timeout || 30000;
-        headers = headers || new Headers();
+        headers = new Headers(headers || {});
 
         const ajax_url = freshia.ajax_url || '/wp-admin/admin-ajax.php';
-        const ajax_nonce = freshia.ajax_nonce || '';
+        const nonce = freshia.ajax_nonce || '';
         const dataType = Object.prototype.toString.call(data);
 
         // 生成请求唯一 key（同 action + method + data 会视为同一个请求）
@@ -62,129 +72,115 @@ const wpAjax = (() => {
             }
         };
 
+        let url, config;
+
         // ---- GET 请求 ----
         if (method === 'GET') {
             switch (dataType) {
                 case '[object URLSearchParams]':
                     data.set('action', action);
-                    ajax_nonce && data.set('_wpnonce', ajax_nonce);
-                    data = data.toString();
+                    nonce && data.set('_wpnonce', nonce);
                     break;
 
                 case '[object FormData]':
-                    data.set('action', action);
-                    ajax_nonce && data.set('_wpnonce', ajax_nonce);
-                    data = new URLSearchParams(data).toString();
-                    console.warn('GET 请求不建议使用 FormData，已转换为 URLSearchParams');
-                    break;
+                    return Promise.reject(new Error('wpAjax: GET 请求不支持 FormData 类型的 data'));
 
                 case '[object Object]':
-                    data = ajax_nonce ? { ...data, action, _wpnonce: ajax_nonce } : { ...data, action };
-                    data = new URLSearchParams(data).toString();
+                    data = new URLSearchParams(data);
+                    data.set('action', action);
+                    nonce && data.set('_wpnonce', nonce);
                     break;
-
                 default:
-                    const wpnonce = ajax_nonce ? `&_wpnonce=${encodeURIComponent(ajax_nonce)}` : '';
+                    const wpnonce = nonce ? `&_wpnonce=${encodeURIComponent(nonce)}` : '';
                     data = `action=${encodeURIComponent(action)}${wpnonce}`;
             }
 
-            headers.set('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-
-            return fetch(`${ajax_url}?${data}`, {
+            url = `${ajax_url}?${data.toString()}`;
+            config = {
                 method: 'GET',
                 headers,
-                signal: controller.signal
-            }).then(async response => {
-                clearPending();
-                if (!response.ok) {
-                    const error = new Error(`HTTP error! status: ${response.status}`);
-                    error.response = response;
-                    throw error;
-                }
-                return response.json();
-            }).catch(error => {
-                clearPending();
-                if (error.name === 'AbortError') {
-                    let reason = controller.abortReason || 'manual';
-                    let msg =
-                        reason === 'timeout'
-                            ? `Request timed out after ${timeout}ms`
-                            : `Request manually aborted`;
-                    const newError = new Error(msg);
-                    newError.name = 'AbortError';
-                    newError.reason = controller.abortReason;
-                    console.warn('wpAjax Error:', newError);
-                    throw newError;
-                }
-                console.error('wpAjax Error:', error);
-                throw error;
-            });
+                signal: controller.signal,
+            };
 
-        }
-
-        // ---- POST 请求 ----
-        else {
+            // ---- POST 请求 ----    
+        } else if (method === 'POST') {
             switch (dataType) {
                 case '[object URLSearchParams]':
-                    return Promise.reject(new Error('POST 请求不支持 URLSearchParams，请使用 FormData 或 Object'));
-
+                    return Promise.reject(new Error('wpAjax: POST 请求不支持 URLSearchParams 类型的 data'));
                 case '[object FormData]':
-                    data.set('action', action);
-                    ajax_nonce && data.set('_wpnonce', ajax_nonce);
-                    break;
-
-                case '[object Object]':
-                    const dataObject = ajax_nonce ? { ...data, action, _wpnonce: ajax_nonce } : { ...data, action };
-                    const formData = new FormData();
-                    for (const [key, value] of Object.entries(dataObject)) {
-                        formData.set(key, value);
+                    if (isJSON) {
+                        return Promise.reject(new Error('wpAjax: POST 请求不支持同时使用 JSON 格式的 headers 和 FormData 类型的 data'));
                     }
-                    data = formData;
+                    data.set('action', action);
+                    nonce && data.set('_wpnonce', nonce);
                     break;
-
+                case '[object Object]':
+                    if (isJSON) {
+                        data = JSON.stringify(data);
+                    } else {
+                        const dataObject = nonce ? { ...data, action, _wpnonce: nonce } : { ...data, action };
+                        const formData = new FormData();
+                        for (const [key, value] of Object.entries(dataObject)) {
+                            formData.set(key, value);
+                        }
+                        data = formData;
+                    }
+                    break;
                 default:
+                    if (isJSON) {
+                        return Promise.reject(new Error('wpAjax: POST 请求不支持非 Object 类型的 data'));
+                    }
                     data = new FormData();
                     data.set('action', action);
-                    ajax_nonce && data.set('_wpnonce', ajax_nonce);
+                    nonce && data.set('_wpnonce', nonce);
             }
 
-            return fetch(ajax_url, {
+            url = ajax_url;
+            if (isJSON) {
+                url = `${url}?action=${encodeURIComponent(action)}&_wpnonce=${encodeURIComponent(nonce)}`;
+                headers.set('Content-Type', 'application/json; charset=UTF-8');
+            }
+            config = {
                 method: 'POST',
                 body: data,
                 headers,
-                signal: controller.signal
-            }).then(async response => {
-                clearPending();
-                if (!response.ok) {
-                    const error = new Error(`HTTP error! status: ${response.status}`);
-                    error.response = response;
-                    throw error;
-                }
-                return response.json();
-            }).catch(error => {
-                clearPending();
-                if (error.name === 'AbortError') {
-                    let reason = controller.abortReason || 'manual';
-                    let msg =
-                        reason === 'timeout'
-                            ? `Request timed out after ${timeout}ms`
-                            : `Request manually aborted`;
-                    const newError = new Error(msg);
-                    newError.name = 'AbortError';
-                    newError.reason = controller.abortReason;
-                    console.warn('wpAjax Error:', newError);
-                    throw newError;
-                }
-                console.error('wpAjax Error:', error);
-                throw error;
-            });
+                signal: controller.signal,
+            };
+        } else {
+            return Promise.reject(new Error('wpAjax: 只支持 GET 和 POST 请求'));
         }
+
+        return fetch(url, config).then(async response => {
+            clearPending();
+            if (!response.ok) {
+                const error = new Error(`HTTP error! status: ${response.status}`);
+                error.response = response;
+                throw error;
+            }
+            return response.json();
+        }).catch(error => {
+            clearPending();
+            if (error.name === 'AbortError') {
+                let reason = controller.abortReason || 'manual';
+                let msg =
+                    reason === 'timeout'
+                        ? `Request timed out after ${timeout}ms`
+                        : `Request manually aborted`;
+                const newError = new Error(msg);
+                newError.name = 'AbortError';
+                newError.reason = controller.abortReason;
+                console.warn('wpAjax Error:', newError);
+                throw newError;
+            }
+            console.error('wpAjax Error:', error);
+            throw error;
+        });
     }
 
     return {
         request,
-        get: (options) => request({ ...options, method: 'GET' }),
-        post: (options) => request({ ...options, method: 'POST' }),
+        get: (action, options, isJSON) => request({ action, ...options, isJSON, method: 'GET' }),
+        post: (action, options, isJSON) => request({ action, ...options, isJSON, method: 'POST' }),
     };
 })();
 

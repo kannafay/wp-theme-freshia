@@ -36,7 +36,7 @@ function freshia_scripts() {
     // 引入gsap库
     wp_enqueue_script(
         'freshia-gsap',
-        get_template_directory_uri() . '/assets/js/gsap.min.js',
+        get_template_directory_uri() . '/assets/js/libs/gsap.min.js',
         array(),
         null,
         true
@@ -45,7 +45,7 @@ function freshia_scripts() {
     // 引入pjax库
     wp_enqueue_script(
         'freshia-pjax',
-        get_template_directory_uri() . '/assets/js/pjax.min.js',
+        get_template_directory_uri() . '/assets/js/libs/pjax.min.js',
         array(),
         null,
         true
@@ -62,12 +62,14 @@ function freshia_scripts() {
 
     // 本地化脚本，传递PHP数据到JS
     wp_localize_script('head-script', 'freshia', array(
+        'rest_url' => esc_url_raw(rest_url()),
         'ajax_url' => admin_url('admin-ajax.php'),
         'site_url' => get_site_url(),
-        'ajax_nonce' => wp_create_nonce('freshia_nonce'),
+        'nonce' => wp_create_nonce('wp_rest'),
+        'ajax_nonce' => wp_create_nonce('ajax_nonce'),
         'is_logged_in' => is_user_logged_in(),
-        'user_id' => get_current_user_id(),
-        'current_user_can_admin' => current_user_can('manage_options'),
+        'user_id' => get_current_user_id() ?: null,
+        'is_admin' => current_user_can('manage_options'),
         'theme_version' => wp_get_theme()->get('Version'),
         'options' => array(
             'pjax' => true,
