@@ -19,8 +19,8 @@ function freshia_setup() {
  * 简化引入函数
  */
 function the_asset($path) {
-    echo get_template_directory_uri() . '/' . $path;
+    echo get_template_directory_uri() . '/assets/' . $path;
 }
 function get_the_asset($path) {
-    return get_template_directory_uri() . '/' . $path;
+    return get_template_directory_uri() . '/assets/' . $path;
 }

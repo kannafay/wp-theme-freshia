@@ -35,7 +35,3 @@
 
 <div>
     <main class="container mx-auto px-4 py-8">
-    <?php
-    $image = get_the_post_thumbnail_url() ?: get_template_directory_uri() . '/default-image.jpg';
-        var_dump($image);
-    ?>

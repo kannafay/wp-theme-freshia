@@ -8,7 +8,7 @@ function freshia_seo_meta() {
     $title = wp_get_document_title();
     $description = get_bloginfo('description');
     $keywords = ''; // 可根据需要添加关键词
-    $image = get_template_directory_uri() . '/default-image.jpg';
+    $image = get_the_asset('images/og-image.png'); // 默认图片
     $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
     switch(true) {
