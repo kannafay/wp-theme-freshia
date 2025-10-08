@@ -11,7 +11,13 @@ function handle_ajax_test() {
         ]);
     }
 
-    $json = json_decode(file_get_contents('php://input'), true);
+    // $json = json_decode(file_get_contents('php://input'), true);
+    // wp_send_json_success($json);
 
-    wp_send_json_success($json);
+    $images = isset($_FILES['images']) ? $_FILES['images'] : null;
+    if ($images) {
+        wp_send_json_success($images);
+    }
+
+    wp_send_json_success($_REQUEST);
 }

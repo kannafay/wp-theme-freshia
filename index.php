@@ -5,6 +5,12 @@
 <section>这是首页</section>
 
 <div>
+    <form>
+        <input type="file" name="images[]" id="" multiple />
+    </form>
+</div>
+
+<div>
     <button class="request" id="ajax">WP AJAX 请求测试</button>
 </div>
 

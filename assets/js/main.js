@@ -50,10 +50,22 @@ function fetchTest() {
                 }
             };
 
+            const formData = new FormData(document.querySelector('form'));
+            let isEmpty = true;
+
+            for (const [key, value] of formData.entries()) {
+                if (value instanceof File && value.name) {
+                    isEmpty = false;
+                    break;
+                }
+            }
+            
+            data = isEmpty ? data : formData;
+
             // ----- AJAX 请求 -----
             if (id === 'ajax') {
                 req = 'WP AJAX';
-                res = await wpAjax.post('ajax_test', { data }, true);
+                res = await wpAjax.post('ajax_test', { data });
             }
 
             // ----- REST API 请求 -----
@@ -66,7 +78,7 @@ function fetchTest() {
             console.timeEnd('请求用时');
         });
     });
-    
+
     // ----- REST API 自动请求（页面加载完成后） -----
     const data = new FormData();
     data.set('id', 1);
@@ -76,8 +88,7 @@ function fetchTest() {
         id: 1,
         page: 2,
         name: 'Kanna'
-    })
-    .then(res => {
+    }).then(res => {
         console.log('WP REST API 自动请求成功:', res);
     })
 }

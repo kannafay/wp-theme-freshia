@@ -107,6 +107,7 @@ const wpAjax = (() => {
             switch (dataType) {
                 case '[object URLSearchParams]':
                     return Promise.reject(new Error('wpAjax: POST 请求不支持 URLSearchParams 类型的 data'));
+
                 case '[object FormData]':
                     if (isJSON) {
                         return Promise.reject(new Error('wpAjax: POST 请求不支持同时使用 JSON 格式的 headers 和 FormData 类型的 data'));
@@ -114,18 +115,23 @@ const wpAjax = (() => {
                     data.set('action', action);
                     nonce && data.set('_wpnonce', nonce);
                     break;
+
                 case '[object Object]':
                     if (isJSON) {
                         data = JSON.stringify(data);
                     } else {
                         const dataObject = nonce ? { ...data, action, _wpnonce: nonce } : { ...data, action };
-                        const formData = new FormData();
-                        for (const [key, value] of Object.entries(dataObject)) {
-                            formData.set(key, value);
-                        }
-                        data = formData;
+
+                        // const formData = new FormData();
+                        // for (const [key, value] of Object.entries(dataObject)) {
+                        //     formData.append(key, value);
+                        // }
+                        // data = formData;
+
+                        data = objectToFormData(dataObject);
                     }
                     break;
+
                 default:
                     if (isJSON) {
                         return Promise.reject(new Error('wpAjax: POST 请求不支持非 Object 类型的 data'));
@@ -175,6 +181,31 @@ const wpAjax = (() => {
             console.error('wpAjax Error:', error);
             throw error;
         });
+    }
+
+    // 辅助函数：将普通对象转换为 FormData（支持嵌套对象和数组）
+    function objectToFormData(obj, formData = new FormData(), parentKey = '') {
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                const value = obj[key];
+                const formKey = parentKey ? `${parentKey}[${key}]` : key; // 处理嵌套字段名
+                // 处理 null/undefined（跳过）
+                if (value == null) continue;
+                // 处理数组/对象（递归）
+                if (typeof value === 'object' && !(value instanceof File)) {
+                    objectToFormData(value, formData, formKey);
+                }
+                // 处理文件（直接添加）
+                else if (value instanceof File) {
+                    formData.append(formKey, value);
+                }
+                // 处理其他类型（转字符串）
+                else {
+                    formData.append(formKey, String(value));
+                }
+            }
+        }
+        return formData;
     }
 
     return {
