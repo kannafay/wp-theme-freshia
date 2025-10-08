@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 标题过滤
+ * 标题设置
  */
 add_filter('document_title_parts', 'freshia_title');
 function freshia_title($title) {

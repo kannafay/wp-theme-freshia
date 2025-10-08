@@ -16,6 +16,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
@@ -34,3 +35,7 @@
 
 <div>
     <main class="container mx-auto px-4 py-8">
+    <?php
+    $image = get_the_post_thumbnail_url() ?: get_template_directory_uri() . '/default-image.jpg';
+        var_dump($image);
+    ?>
