@@ -4,13 +4,14 @@ const { addIconSelectors } = require("@iconify/tailwind");
 module.exports = {
 	darkMode: 'class',
 	content: [
-		'./*.php',
-		'./**/*.php',
 		'./assets/js/**/*.js',
 		'./blocks/build/**/*.{js,php}',
+		'./components/**/*.php',
+		'./templates/**/*.php',
+		'./modules/**/*.php',
+		'./*.php',
 		// 排除不必要的目录
 		'!./**/node_modules/**',
-		'!./assets/js/lib/**',
 		'!./admin/**',
 		'!./.git/**',
 		'!./vendor/**',
