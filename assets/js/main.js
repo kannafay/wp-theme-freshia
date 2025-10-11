@@ -37,7 +37,6 @@ function fetchTest() {
 
     btns.forEach(btn => {
         btn.addEventListener('click', async (e) => {
-            console.time('请求用时');
             e.preventDefault();
             const id = e.target.id;
             let req, res, data = {
@@ -75,7 +74,6 @@ function fetchTest() {
             }
 
             console.log(req, '请求成功:', res);
-            console.timeEnd('请求用时');
         });
     });
 

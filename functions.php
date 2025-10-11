@@ -8,6 +8,13 @@ if (!defined('ABSPATH')) {
 }
 
 /**
+ * 加载 Composer 自动加载文件
+ */
+if (file_exists($autoload_file = wp_normalize_path(get_theme_file_path('vendor/autoload.php')))) {
+    require_once $autoload_file;
+}
+
+/**
  * 递归加载模组文件
  */
 function freshia_collect_php_files(string $directory): array {

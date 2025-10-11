@@ -1,5 +1,19 @@
 # 备注
 
+## 安装依赖
+
+```bash
+# 安装tailwindcss依赖
+pnpm i
+
+# 安装composer依赖
+composer i
+
+# 安装WP区块依赖
+cd blocks
+pnpm i
+```
+
 ## WP区块开发
 
 ```bash

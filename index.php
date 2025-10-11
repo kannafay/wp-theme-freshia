@@ -18,10 +18,15 @@
     <button class="request" id="rest">WP REST API 请求测试</button>
 </div>
 
-<!-- <pre>
+<pre>
     <?php
-        var_dump(get_option('freshia_options'));
+        $orders = new Orders();
+        $order = $orders->getByUserID(1);
+        var_dump($order);
+        
+        // var_dump(get_option('freshia_options'));
+        // var_dump($_SERVER['SERVER_ADDR']);
     ?>
-</pre> -->
+</pre>
 
 <?php get_footer(); ?>
