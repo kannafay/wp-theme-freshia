@@ -75,6 +75,8 @@ class ThemeSwitcher {
 		if (isDark && !hasDark) root.classList.add('dark');
 		else if (!isDark && hasDark) root.classList.remove('dark');
 		root.style.colorScheme = isDark ? 'dark' : 'light';
+		const bgColor = getComputedStyle(root).getPropertyValue('--color-bg').trim();
+		document.querySelector('meta[name="theme-color"]').setAttribute('content', bgColor);
 	}
 }
 

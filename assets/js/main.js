@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', initMainScripts);
 function initMainScripts() {
     themeMode();
     fetchTest();
+    payTest();
 }
 
 // WP AJAX 请求测试
@@ -89,4 +90,32 @@ function fetchTest() {
     }).then(res => {
         console.log('WP REST API 自动请求成功:', res);
     })
+}
+
+function payTest() {
+    const order_status = document.querySelector('#order-status');
+    const order_list = document.querySelectorAll('#order-list li');
+    if (order_status) {
+        let timer = setInterval(() => {
+            wpRest.get('freshia/v1/order/status', {
+                order_id: order_status.dataset.orderId,
+                t: Date.now()
+            }).then(res => {
+                if (res.success && res.data.status === 'paid') {
+                    clearInterval(timer);
+                    order_status.textContent = res.data.status;
+                    order_list.forEach(li => {
+                        if (li.dataset.orderId === order_status.dataset.orderId) {
+                            li.querySelector('span').textContent = res.data.status;
+                        }
+                    });
+                    const qrcode = document.querySelector('#qrcode')
+                    if (qrcode) {
+                        qrcode.remove();
+                        alert('支付成功！');
+                    }
+                }
+            })
+        }, 2000);
+    }
 }

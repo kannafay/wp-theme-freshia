@@ -10,7 +10,7 @@
 
 const wpRest = (() => {
     const base = window.freshia?.rest_url || '/wp-json/';
-    const nonce = window.freshia?.nonce || '';
+    const nonce = window.freshia?.rest_nonce || '';
 
     async function request(endpoint, { method = 'GET', body = null, headers = {} } = {}) {
         const url = endpoint.startsWith('http')

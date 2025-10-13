@@ -1,5 +1,10 @@
 <?php
 
+// 阻止直接访问
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * 注册自定义的 REST API 路由
  * @param string $method 请求方法 GET, POST, PUT, PATCH, DELETE

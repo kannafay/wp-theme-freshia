@@ -1,5 +1,10 @@
 <?php
 
+// 阻止直接访问
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * 主题支持
  */
@@ -15,12 +20,3 @@ function freshia_setup() {
     add_filter('show_admin_bar', '__return_false');
 }
 
-/**
- * 简化引入函数
- */
-function the_asset($path) {
-    echo get_template_directory_uri() . '/assets/' . $path;
-}
-function get_the_asset($path) {
-    return get_template_directory_uri() . '/assets/' . $path;
-}

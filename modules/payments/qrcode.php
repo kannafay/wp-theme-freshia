@@ -1,9 +1,13 @@
 <?php
 
+// 阻止直接访问
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * 二维码生成
  */
-
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;

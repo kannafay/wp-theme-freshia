@@ -1,14 +1,8 @@
 <?php
 
-/**
- * 默认头像
- * @return string
- */
-function default_avatar($avatar = false) {
-    if (!$avatar) {
-        $avatar = get_template_directory_uri() . '/assets/images/default-avatar.webp';
-    }
-    return $avatar;
+// 阻止直接访问
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 /**
@@ -17,38 +11,40 @@ function default_avatar($avatar = false) {
  * @param int|string|false 附件ID或图片URL，传入false或空字符串删除头像
  * @return object|false|null 成功返回头像对象，失败返回false，删除成功返回null
  */
-function update_avatar($user_id, $attachment_id_or_url) {
-    if ($attachment_id_or_url === false || $attachment_id_or_url === '') {
-        update_user_meta($user_id, 'avatar', '');
-        return;
-    }
-
-    if (is_numeric($attachment_id_or_url) && (int)$attachment_id_or_url > 0) {
-        $attachment_id = (int)$attachment_id_or_url;
-        if (!wp_attachment_is_image($attachment_id)) {
-            return false;
+if (!function_exists('update_avatar')) {
+    function update_avatar($user_id, $attachment_id_or_url) {
+        if ($attachment_id_or_url === false || $attachment_id_or_url === '') {
+            update_user_meta($user_id, 'avatar', '');
+            return;
         }
-        $avatar_url = wp_get_attachment_url($attachment_id);
-    } else {
-        $avatar_url = esc_url($attachment_id_or_url);
+
+        if (is_numeric($attachment_id_or_url) && (int)$attachment_id_or_url > 0) {
+            $attachment_id = (int)$attachment_id_or_url;
+            if (!wp_attachment_is_image($attachment_id)) {
+                return false;
+            }
+            $avatar_url = wp_get_attachment_url($attachment_id);
+        } else {
+            $avatar_url = esc_url($attachment_id_or_url);
+        }
+
+        $avatar = new stdClass();
+        $avatar->id = $attachment_id ?? 0;
+        $avatar->url = $avatar_url;
+        update_user_meta($user_id, 'avatar', $avatar);
+
+        return $avatar;
     }
-
-    $avatar = new stdClass();
-    $avatar->id = $attachment_id ?? 0;
-    $avatar->url = $avatar_url;
-    update_user_meta($user_id, 'avatar', $avatar);
-
-    return $avatar;
 }
 
 /**
- * 过滤头像URL
+ * 过滤头像URL，优先使用用户自定义头像
  */
 add_filter('get_avatar_url', 'freshia_avatar_url', 10, 3);
 function freshia_avatar_url($url, $id_or_email, $args) {
     $user_id = 0;
     $email = '';
-    $avatar_url = default_avatar();
+    $avatar_url = get_template_directory_uri() . '/assets/images/default-avatar.webp';
 
     switch($id_or_email) {
         // 用户id

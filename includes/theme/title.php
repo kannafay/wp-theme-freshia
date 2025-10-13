@@ -1,5 +1,10 @@
 <?php
 
+// 阻止直接访问
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * 标题设置
  */

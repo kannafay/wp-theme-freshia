@@ -56,6 +56,9 @@ class WechatPayService
         if ($unifiedOrder->return_code != 'SUCCESS') {
             return (string)$unifiedOrder->return_msg;
         }
+        if ($unifiedOrder->result_code != 'SUCCESS') {
+            return (string)$unifiedOrder->err_code;
+        }
 
         return $unifiedOrder;
     }

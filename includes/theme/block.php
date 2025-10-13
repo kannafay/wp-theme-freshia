@@ -1,5 +1,10 @@
 <?php
 
+// 阻止直接访问
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * 注册区块分类
  */

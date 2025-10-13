@@ -1,5 +1,10 @@
 <?php
 
+// 阻止直接访问
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * 引入主题脚本和样式
  */
@@ -65,7 +70,7 @@ function freshia_scripts() {
         'rest_url' => esc_url_raw(rest_url()),
         'ajax_url' => admin_url('admin-ajax.php'),
         'site_url' => get_site_url(),
-        'nonce' => wp_create_nonce('wp_rest'),
+        'rest_nonce' => wp_create_nonce('wp_rest'),
         'ajax_nonce' => wp_create_nonce('ajax_nonce'),
         'is_logged_in' => is_user_logged_in(),
         'user_id' => get_current_user_id() ?: null,
@@ -76,6 +81,7 @@ function freshia_scripts() {
         ),
     ));
 
+    // 过滤脚本标签，添加 type="module"
     add_filter('script_loader_tag', 'add_module_type_script', 10, 3);
 }
 

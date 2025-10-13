@@ -1,5 +1,6 @@
 <?php
 
+// 阻止直接访问
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -25,20 +26,28 @@ class Orders
             $this->table,
             [
                 'order_id' => $data['order_id'],
+                'order_name' => $data['order_name'],
                 'user_id' => $data['user_id'],
-                'name' => $data['name'],
-                'amount' => $data['amount'],
+                'post_id' => $data['post_id'],
+                'fee_type' => $data['fee_type'],
+                'total_fee' => $data['total_fee'],
+                'payment_method' => $data['payment_method'],
                 'status' => $data['status'] ?? 'pending',
+                'transaction_id' => $data['transaction_id'] ?? '',
                 'created_at' => current_time('mysql'),
                 'updated_at' => current_time('mysql'),
                 'deleted_at' => null,
             ],
             [
                 '%s', // order_id
+                '%s', // order_name
                 '%d', // user_id
-                '%s', // name
-                '%f', // amount
+                '%d', // post_id
+                '%s', // fee_type
+                '%f', // total_fee
+                '%s', // payment_method
                 '%s', // status
+                '%s', // transaction_id
                 '%s', // created_at
                 '%s', // updated_at
                 '%s', // deleted_at

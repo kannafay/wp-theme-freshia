@@ -4,7 +4,7 @@
 
 <section>这是首页</section>
 
-<div>
+<div class="dark:bg-red-500">
     <form>
         <input type="file" name="images[]" id="" multiple />
     </form>
@@ -18,15 +18,8 @@
     <button class="request" id="rest">WP REST API 请求测试</button>
 </div>
 
-<pre>
-    <?php
-        $orders = new Orders();
-        $order = $orders->getByUserID(1);
-        var_dump($order);
-        
-        // var_dump(get_option('freshia_options'));
-        // var_dump($_SERVER['SERVER_ADDR']);
-    ?>
-</pre>
+<?php
+    var_dump(date('Y-m-d H:i:s', strtotime('-2 hours', current_time('timestamp'))));
+?>
 
 <?php get_footer(); ?>
