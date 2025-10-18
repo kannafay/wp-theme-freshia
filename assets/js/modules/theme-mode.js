@@ -1,10 +1,10 @@
-import ThemeSwitcher from '../packages/theme-switcher.js';
+import ColorMode from '../packages/color-mode.js';
 
 /**
  * 主题模式
  */
 export default function themeMode() {
-    const switcher = new ThemeSwitcher();
+    const switcher = new ColorMode();
     // console.log(`当前主题模式: ${switcher.getMode()}`);
     // console.log(`当前系统模式: ${switcher.getSystemMode()}`);
     

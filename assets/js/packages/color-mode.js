@@ -1,5 +1,5 @@
 /**
- * 主题模式切换 功能模块
+ * 主题颜色模式切换器
  * 
  * 支持浅色、深色和自动三种模式
  * 自动模式下根据系统主题自动切换
@@ -11,7 +11,7 @@
  * toggle() - 切换浅色/深色模式
  */
 
-class ThemeSwitcher {
+class ColorMode {
 	static MODES = {
 		LIGHT: 'light',
 		DARK: 'dark',
@@ -26,19 +26,19 @@ class ThemeSwitcher {
 
 		// 自动模式下监听系统主题变化
 		this.media.addEventListener('change', e => {
-			if (this.mode === ThemeSwitcher.MODES.AUTO) {
+			if (this.mode === ColorMode.MODES.AUTO) {
 				this.applyTheme(this.mode);
 			}
 		});
 	}
 
 	getSavedMode() {
-		return localStorage.getItem(this.storageKey) || ThemeSwitcher.MODES.AUTO;
+		return localStorage.getItem(this.storageKey) || ColorMode.MODES.AUTO;
 	}
 
 	setMode(mode) {
-		if (!Object.values(ThemeSwitcher.MODES).includes(mode)) {
-			console.warn(`[ThemeSwitcher] 无效模式: ${mode}`);
+		if (!Object.values(ColorMode.MODES).includes(mode)) {
+			console.warn(`[ColorMode] 无效模式: ${mode}`);
 			return;
 		}
 		this.mode = mode;
@@ -51,17 +51,17 @@ class ThemeSwitcher {
 	}
 
 	getSystemMode() {
-		return this.media.matches ? ThemeSwitcher.MODES.DARK : ThemeSwitcher.MODES.LIGHT;
+		return this.media.matches ? ColorMode.MODES.DARK : ColorMode.MODES.LIGHT;
 	}
 
 	toggle() {
-		const { LIGHT, DARK } = ThemeSwitcher.MODES;
+		const { LIGHT, DARK } = ColorMode.MODES;
 		this.setMode(this.mode === LIGHT ? DARK : LIGHT);
 	}
 
 	applyTheme(mode) {
 		const root = document.documentElement;
-		const { LIGHT, DARK } = ThemeSwitcher.MODES;
+		const { LIGHT, DARK } = ColorMode.MODES;
 		let isDark;
 		switch (mode) {
 			case LIGHT:
@@ -80,4 +80,4 @@ class ThemeSwitcher {
 	}
 }
 
-export default ThemeSwitcher;
+export default ColorMode;

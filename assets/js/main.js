@@ -1,7 +1,7 @@
 import initHeadScripts from './main-head.js';
 import themeMode from './modules/theme-mode.js';
-import wpAjax from './packages/wp-ajax.js';
-import wpRest from './packages/wp-rest.js';
+import fetchTest from './modules/fetch-test.js';
+import payTest from './modules/pay-test.js';
 
 // 初始化 Pjax 进行无刷新页面加载
 if (freshia.options.pjax) {
@@ -28,94 +28,6 @@ if (freshia.options.pjax) {
 document.addEventListener('DOMContentLoaded', initMainScripts);
 function initMainScripts() {
     themeMode();
-    fetchTest();
+    // fetchTest();
     payTest();
-}
-
-// WP AJAX 请求测试
-function fetchTest() {
-    const btns = document.querySelectorAll('.request');
-
-    btns.forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            const id = e.target.id;
-            let req, res, data = {
-                name: 'kanna',
-                age: 18,
-                hobby: ['reading', 'coding', 'gaming'],
-                game: {
-                    lol: 'League of Legends',
-                    dota: 'Dota 2',
-                }
-            };
-
-            const formData = new FormData(document.querySelector('form'));
-            let isEmpty = true;
-
-            for (const [key, value] of formData.entries()) {
-                if (value instanceof File && value.name) {
-                    isEmpty = false;
-                    break;
-                }
-            }
-            
-            data = isEmpty ? data : formData;
-
-            // ----- AJAX 请求 -----
-            if (id === 'ajax') {
-                req = 'WP AJAX';
-                res = await wpAjax.post('ajax_test', { data });
-            }
-
-            // ----- REST API 请求 -----
-            if (id === 'rest') {
-                req = 'WP REST API';
-                res = await wpRest.post('freshia/v1/rest_test', data);
-            }
-
-            console.log(req, '请求成功:', res);
-        });
-    });
-
-    // ----- REST API 自动请求（页面加载完成后） -----
-    const data = new FormData();
-    data.set('id', 1);
-    data.set('page', 2);
-    data.set('name', 'Kanna');
-    wpRest.post('freshia/v1/rest_args', {
-        id: 1,
-        page: 2,
-        name: 'Kanna'
-    }).then(res => {
-        console.log('WP REST API 自动请求成功:', res);
-    })
-}
-
-function payTest() {
-    const order_status = document.querySelector('#order-status');
-    const order_list = document.querySelectorAll('#order-list li');
-    if (order_status) {
-        let timer = setInterval(() => {
-            wpRest.get('freshia/v1/order/status', {
-                order_id: order_status.dataset.orderId,
-                t: Date.now()
-            }).then(res => {
-                if (res.success && res.data.status === 'paid') {
-                    clearInterval(timer);
-                    order_status.textContent = res.data.status;
-                    order_list.forEach(li => {
-                        if (li.dataset.orderId === order_status.dataset.orderId) {
-                            li.querySelector('span').textContent = res.data.status;
-                        }
-                    });
-                    const qrcode = document.querySelector('#qrcode')
-                    if (qrcode) {
-                        qrcode.remove();
-                        alert('支付成功！');
-                    }
-                }
-            })
-        }, 2000);
-    }
 }

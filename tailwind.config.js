@@ -6,7 +6,7 @@ module.exports = {
 	content: [
 		'./assets/js/**/*.js',
 		'./blocks/build/**/*.{js,php}',
-		'./components/**/*.php',
+		'./template-parts/**/*.php',
 		'./templates/**/*.php',
 		'./modules/**/*.php',
 		'./*.php',

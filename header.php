@@ -21,6 +21,7 @@
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
+<script src="<?php the_asset('js/libs/alpine.min.js'); ?>"></script>
 
 <header class="sticky top-0 z-50">
     <nav class="flex items-center gap-4 bg-[--color-box-bg] h-[--header-height] shadow-md">

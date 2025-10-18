@@ -17,12 +17,11 @@ add_action('rest_api_init', function() {
 
             $orders = new Orders();
             $order = $orders->getByOrderID($res_order_id);
+            $checkFee = (int)($order['total_fee']*100) === (int)$result->total_fee ?: false;
+            $isPending = $order['status'] === 'pending' ?: false;
 
-            if (
-                $order
-                && (int)($order['total_fee']*100) === (int)$result->total_fee
-                && $order['status'] !== 'paid'
-            ) {
+            // 更新订单状态
+            if (!empty($order) && $checkFee && $isPending) {
                 $orders->update($order['order_id'], [
                     'transaction_id' => (string)$result->transaction_id,
                     'status' => 'paid',

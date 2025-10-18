@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * 微信支付服务类
+ */
 class WechatPayService
 {
     protected $mchid;
