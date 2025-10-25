@@ -1,7 +1,9 @@
 <?php get_header(); ?>
 
 <section>
-    hello world
+    <?php
+    var_dump(get_template_directory());
+    ?>
 </section>
 
 <?php get_footer(); ?>

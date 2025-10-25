@@ -1,0 +1,19 @@
+{
+	"name": "blocks",
+	"main": "build/index.js",
+	"scripts": {
+		"build": "wp-scripts build --blocks-manifest",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"dev": "wp-scripts start --blocks-manifest"
+	},
+	"dependencies": {
+		"@wordpress/icons": "^11.0.0"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.26.0"
+	}
+}

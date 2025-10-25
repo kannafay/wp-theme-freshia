@@ -4,20 +4,6 @@
 defined('ABSPATH') || exit;
 
 /**
- * 主题支持
- */
-add_action('after_setup_theme', function () {
-    // 文章缩略图
-    add_theme_support('post-thumbnails');
-
-    // 自动添加标题标签
-    add_theme_support('title-tag');
-
-    // 禁用前端管理员工具栏
-    add_filter('show_admin_bar', '__return_false');
-});
-
-/**
  * 获取 Vite 开发服务器状态
  */
 function is_vite_dev_running(): bool {
@@ -77,4 +63,42 @@ add_action('wp_enqueue_scripts', function () {
         }
         return $tag;
     }, 10, 3);
+});
+
+/**
+ * 主题支持
+ */
+add_action('after_setup_theme', function () {
+    // 文章缩略图
+    add_theme_support('post-thumbnails');
+
+    // 自动添加标题标签
+    add_theme_support('title-tag');
+
+    // 禁用前端管理员工具栏
+    add_filter('show_admin_bar', '__return_false');
+});
+
+/**
+ * 设置网站标题
+ */
+add_filter('document_title_parts', function ($title) {
+    // 认证页面
+    if (is_page_template('templates/auth.php')) {
+        $action = $_GET['action'] ?? '';
+
+        switch ($action) {
+            case 'register':
+                $title['title'] = '注册';
+                break;
+            case 'reset':
+                $title['title'] = '重置密码';
+                break;
+            default:
+                $title['title'] = '登录';
+                break;
+        }
+    }
+
+    return $title;
 });
