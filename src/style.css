@@ -1,0 +1,38 @@
+@import 'tailwindcss';
+
+/* Custom Variants */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+	--color-primary: #8183ff;
+}
+
+:root {
+	--header-height: 60px;
+	--color-bg: #ffffff;
+	--color-text: #333333;
+	--color-box-bg: #f9f9f9;
+}
+
+:root.dark {
+	--color-bg: #0E0E0E;
+	--color-text: #ffffff;
+	--color-box-bg: #1A1A1A;
+}
+
+html {
+	background-color: var(--color-bg);
+	color: var(--color-text);
+	scroll-padding-top: calc(var(--header-height) + 1.25rem);
+}
+
+.swup-progress-bar {
+	background-color: #8183ff;
+	position: fixed;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	z-index: 9999;
+	user-select: none;
+	pointer-events: none;
+}

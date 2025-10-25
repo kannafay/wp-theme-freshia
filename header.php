@@ -1,39 +1,37 @@
 <!DOCTYPE html>
-<html <?php language_attributes(); ?> class="bg-[--color-bg] text-[--color-text]">
+<html <?php language_attributes(); ?>>
+
 <head>
-    <script>
-        // 预先应用主题模式，防止深色模式首次渲染闪烁
-        (function(){
-            try {
-                const mode = localStorage.getItem('theme-mode') || 'auto';
-                let isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                if (mode === 'light') isDark = false; else if (mode === 'dark') isDark = true;
-                const root = document.documentElement;
-                isDark ? root.classList.add('dark') : root.classList.remove('dark');
-                root.style.colorScheme = isDark ? 'dark' : 'light';
-            } catch(e) {}
-        })();
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color">
+    <script>
+        const mode = localStorage.getItem('color-mode') || 'auto';
+        let isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (mode === 'light') isDark = false; else if (mode === 'dark') isDark = true;
+        const root = document.documentElement;
+        isDark ? root.classList.add('dark') : root.classList.remove('dark');
+        root.style.colorScheme = isDark ? 'dark' : 'light';
+    </script>
     <?php wp_head(); ?>
 </head>
-<body <?php body_class(); ?>>
-<script src="<?php the_asset('js/libs/alpine.min.js'); ?>"></script>
 
-<header class="sticky top-0 z-50">
-    <nav class="flex items-center gap-4 bg-[--color-box-bg] h-[--header-height] shadow-md">
-        <ul class="flex items-center gap-4 mx-auto">
-            <li><a href="/">首页</a></li>
-            <li><a href="/auth">登录</a></li>
-            <li><a href="/auth?action=register">注册</a></li>
-            <li><a href="/auth?action=reset">找回密码</a></li>
-            <li><a href="/1">文章</a></li>
-        </ul>
-    </nav>
-</header>
+<body>
+    <header class="sticky top-0 z-50 bg-[var(--color-box-bg)] w-full h-[var(--header-height)]">
+        <nav class="container mx-auto px-6 flex items-center gap-4 h-full">
+            <a href="/">首页</a>
+            <div class="group relative inline-block">
+                <a href="/1" data-turbo-frame="content">文章</a>
+                <div
+                    class="bg-white absolute top-full left-1/2 -translate-x-1/2 opacity-0 invisible group-hover:opacity-100 group-hover:visible shadow-md px-4 py-2">
+                    <a href="/sample-page?pname=kanna" class="text-nowrap">示例页面</a>
+                </div>
+            </div>
+            <a href="/sample-page">示例页面</a>
+            <span class="debug"></span>
+        </nav>
+    </header>
 
-<div>
-    <main class="container mx-auto px-4 py-8">
+    <section id="swup" class="w-full min-h-[calc(100vh_-_var(--header-height))] flex flex-col justify-between py-4">
+        <main class="container mx-auto px-6">
