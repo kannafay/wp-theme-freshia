@@ -15,6 +15,7 @@ export default function save({ attributes }) {
 			backgroundColor: colors[status] || colors['tip-info'],
 		},
 	})
+
 	return (
 		<div {...blockProps}>
 			<RichText.Content

@@ -1,1 +1,31 @@
-.wp-block-freshia-tip{background-color:#faebd7;box-sizing:border-box;padding:20px}.wp-block-freshia-tip.tip-info{background-color:#d9edf7;border-left:5px solid #31708f}.wp-block-freshia-tip.tip-success{background-color:#dff0d8;border-left:5px solid #3c763d}.wp-block-freshia-tip.tip-warning{background-color:#fcf8e3;border-left:5px solid #8a6d3b}.wp-block-freshia-tip.tip-error{background-color:#f2dede;border-left:5px solid #a94442}
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/.pnpm/css-loader@6.11.0_webpack@5.102.1/node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/.pnpm/postcss-loader@6.2.1_postcss@8.5.6_webpack@5.102.1/node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/.pnpm/sass-loader@16.0.6_sass@1.93.2_webpack@5.102.1/node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/tip/editor.scss ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.wp-block-freshia-tip {
+  box-sizing: border-box;
+  padding: 20px;
+  background-color: antiquewhite;
+}
+.wp-block-freshia-tip.tip-info {
+  background-color: #d9edf7;
+  border-left: 5px solid #31708f;
+}
+.wp-block-freshia-tip.tip-success {
+  background-color: #dff0d8;
+  border-left: 5px solid #3c763d;
+}
+.wp-block-freshia-tip.tip-warning {
+  background-color: #fcf8e3;
+  border-left: 5px solid #8a6d3b;
+}
+.wp-block-freshia-tip.tip-error {
+  background-color: #f2dede;
+  border-left: 5px solid #a94442;
+}
+
+/*# sourceMappingURL=index.css.map*/

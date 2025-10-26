@@ -33,6 +33,7 @@
             <a href="/auth?action=register">注册</a>
             <a href="/auth?action=reset">找回密码</a>
             <a href="/auth?action=resets">404</a>
+            <a href="/pay">支付</a>
         </nav>
     </header>
 
