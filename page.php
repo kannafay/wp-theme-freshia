@@ -1,13 +1,7 @@
 <?php get_header(); ?>
 
-<div class="prose fade-up">
+<section class="container mx-auto px-6">
     <?php the_content(); ?>
-</div>
-
-<script>
-    document.querySelectorAll('.prose > *').forEach(function (el) {
-        el.classList.add('scroll-fade-up');
-    });
-</script>
+</section>
 
 <?php get_footer(); ?>

@@ -6,7 +6,7 @@
     </div>
 </footer>
 
-</section>
+</div>
 
 <!-- 加载进度条 -->
 <div class="swup-progress-bar"></div>

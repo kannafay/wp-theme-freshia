@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+/* Plugin */
+@plugin "@tailwindcss/forms";
+@plugin "@iconify/tailwind4";
+
 /* Custom Variants */
 @custom-variant dark (&:where(.dark, .dark *));
 

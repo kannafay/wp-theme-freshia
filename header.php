@@ -29,9 +29,12 @@
                 </div>
             </div>
             <a href="/sample-page">示例页面</a>
-            <span class="debug"></span>
+            <a href="/auth">登录</a>
+            <a href="/auth?action=register">注册</a>
+            <a href="/auth?action=reset">找回密码</a>
+            <a href="/auth?action=resets">404</a>
         </nav>
     </header>
 
-    <section id="swup" class="w-full min-h-[calc(100vh_-_var(--header-height))] flex flex-col justify-between py-4">
-        <main class="container mx-auto px-6">
+    <div class="w-full min-h-[calc(100vh_-_var(--header-height))] flex flex-col justify-between py-4">
+        <main id="swup">

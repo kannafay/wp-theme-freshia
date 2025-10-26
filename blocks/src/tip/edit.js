@@ -1,27 +1,27 @@
-import './editor.scss';
-import { __ } from '@wordpress/i18n';
+import './editor.scss'
+import { __ } from '@wordpress/i18n'
 import {
 	useBlockProps,
 	BlockControls,
 	RichText,
-} from '@wordpress/block-editor';
+} from '@wordpress/block-editor'
 import {
 	ToolbarGroup,
 	ToolbarDropdownMenu,
-} from '@wordpress/components';
-import { info, caution, error, check } from '@wordpress/icons';
+} from '@wordpress/components'
+import { info, caution, error, check } from '@wordpress/icons'
 
 export default function Edit({ attributes, setAttributes }) {
-	const { status, content } = attributes;
+	const { status, content } = attributes
 	const statuses = [
 		{ label: '信息', value: 'tip-info', icon: info },
 		{ label: '成功', value: 'tip-success', icon: check },
 		{ label: '警告', value: 'tip-warning', icon: caution },
 		{ label: '错误', value: 'tip-error', icon: error },
-	];
+	]
 	const blockProps = useBlockProps({
 		className: status,
-	});
+	})
 	return (<>
 		<BlockControls>
 			<ToolbarGroup>
@@ -45,5 +45,5 @@ export default function Edit({ attributes, setAttributes }) {
 				onChange={(content) => setAttributes({ content })}
 			/>
 		</div>
-	</>);
+	</>)
 }

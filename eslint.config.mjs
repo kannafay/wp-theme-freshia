@@ -8,7 +8,14 @@ export default defineConfig([
 		files: ['**/*.{js,mjs,cjs,jsx,vue}'],
 		plugins: { js },
 		extends: ['js/recommended'],
-		languageOptions: { globals: globals.browser },
+		languageOptions: {
+			globals: globals.browser,
+			parserOptions: {
+				ecmaVersion: 'latest',
+				sourceType: 'module',
+				ecmaFeatures: { jsx: true },
+			},
+		},
 	},
 	pluginVue.configs['flat/essential'],
 	{

@@ -102,3 +102,33 @@ add_filter('document_title_parts', function ($title) {
 
     return $title;
 });
+
+if (!function_exists('wp_send_404')) {
+    /**
+     * 输出 404 页面并终止执行
+     *
+     * @param string|null $message 自定义提示内容（会传入到 404 模板）
+     */
+    function wp_send_404($message = null) {
+        global $wp_query;
+
+        // 标记为 404
+        $wp_query->set_404();
+
+        // 设置响应头
+        status_header(404);
+        nocache_headers();
+
+        // 将自定义信息传入模板
+        if ($message !== null) {
+            // 供 404.php 模板中调用
+            set_query_var('wp_404_message', $message);
+        }
+
+        // 调用主题的 404 模板
+        include get_404_template();
+
+        // 停止执行
+        exit;
+    }
+}
